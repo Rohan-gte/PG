@@ -1,309 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Dashboard - StayEase PG</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #2C3E50;
-            --accent-light: #34495E;
-            --gold: #C9A84C;
-            --dark: #0F172A;
-            --dark-2: #1E293B;
-            --white: #FFFFFF;
-            --text-muted: #94A3B8;
-            --success: #10B981;
-            --danger: #EF4444;
-            --sidebar-width: 260px;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--dark);
-            color: var(--white);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--dark-2);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            flex-direction: column;
-            padding: 30px 20px;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-        }
-
-        .sidebar-brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 50px;
-        }
-
-        .nav-menu { list-style: none; flex: 1; }
-        .nav-item { margin-bottom: 8px; }
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: var(--text-muted);
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--white);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            padding: 40px;
-            max-width: calc(100vw - var(--sidebar-width));
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-        .header-title h1 { font-family: 'Playfair Display', serif; font-size: 28px; }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        .action-card {
-            background: var(--dark-2);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .action-card:hover {
-            background: var(--gold);
-            transform: translateY(-5px);
-            color: var(--dark);
-        }
-        .action-icon { font-size: 24px; margin-bottom: 10px; display: block; }
-        .action-label { font-size: 13px; font-weight: 600; }
-
-        /* Grid Layout */
-        .grid-layout {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 30px;
-        }
-
-        /* Operations Section */
-        .ops-card {
-            background: var(--dark-2);
-            padding: 24px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            margin-bottom: 30px;
-        }
-        .ops-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .ops-title { font-size: 18px; font-weight: 700; font-family: 'Playfair Display', serif; }
-
-        /* Notification List */
-        .notification-list { display: flex; flex-direction: column; gap: 15px; }
-        .notification-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border-left: 4px solid var(--gold);
-        }
-        .notif-icon { font-size: 20px; }
-        .notif-content { flex: 1; }
-        .notif-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-        .notif-desc { font-size: 12px; color: var(--text-muted); }
-        .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
-
-        /* List Styling */
-        .item-list { display: flex; flex-direction: column; gap: 12px; }
-        .list-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .item-main { display: flex; align-items: center; gap: 12px; }
-        .item-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--gold); }
-        .item-info h4 { font-size: 14px; margin-bottom: 2px; }
-        .item-info p { font-size: 12px; color: var(--text-muted); }
-        .item-badge { padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; }
-        .badge-room { background: rgba(201, 168, 76, 0.1); color: var(--gold); }
-
-    </style>
+    <title>Receptionist Dashboard - StaySync</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="sidebar">
-        <div class="sidebar-brand">StayEase</div>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="#" class="nav-link active">Dashboard</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Tenant Entry</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Room Allocation</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Visitors</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Payments</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Complaints</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Notifications</a></li>
-        </ul>
-        <a href="/login" class="nav-link" style="margin-top: auto; color: var(--danger);">Logout</a>
+        <h2>StaySync</h2>
+        <nav>
+            <ul>
+                <li><a href="/receptionist/dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/receptionist/registration"><i class="fas fa-user-plus"></i> New Registration</a></li>
+                <li><a href="/receptionist/availability"><i class="fas fa-bed"></i> Room Availability</a></li>
+                <li><a href="/receptionist/payments"><i class="fas fa-money-bill-wave"></i> Collect Payments</a></li>
+                <li><a href="/receptionist/visitors"><i class="fas fa-walking"></i> Visitor Entry</a></li>
+                <li><a href="/receptionist/complaints"><i class="fas fa-tools"></i> Complaints</a></li>
+                <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
     </div>
 
     <div class="main-content">
-        <header class="header">
-            <div class="header-title">
-                <h1>Receptionist Desk</h1>
-                <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">Managing daily operations for Block A & B.</p>
+        <header>
+            <div class="welcome">
+                <h1>Receptionist Dashboard</h1>
+                <p>Operations Overview - <span th:text="${#calendars.format(#calendars.createNow(), 'dd MMM yyyy')}">Date</span></p>
             </div>
-            <div style="text-align: right;">
-                <div style="font-weight: 600;">Sarah Johnson</div>
-                <div style="font-size: 12px; color: var(--text-muted);">Shift: Morning (8 AM - 4 PM)</div>
+            <div class="user-profile">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Staff&background=10b981&color=fff" alt="Profile">
             </div>
         </header>
 
-        <div class="quick-actions">
-            <div class="action-card">
-                <span class="action-icon">➕</span>
-                <span class="action-label">Add Tenant</span>
+        <div class="stats-grid">
+            <div class="stat-card animate-fade-in" style="animation-delay: 0.1s; border-left: 4px solid var(--primary-color);">
+                <h3>Active Tenants</h3>
+                <div class="value" th:text="${activeTenants}">0</div>
+                <p class="trend">Live Occupancy</p>
             </div>
-            <div class="action-card">
-                <span class="action-icon">🔑</span>
-                <span class="action-label">Allocate Room</span>
+            <div class="stat-card animate-fade-in" style="animation-delay: 0.2s; border-left: 4px solid var(--success);">
+                <h3>Available Beds</h3>
+                <div class="value" th:text="${availableBeds}">0</div>
+                <p class="trend">Ready for Check-in</p>
             </div>
-            <div class="action-card">
-                <span class="action-icon">📋</span>
-                <span class="action-label">Visitor Entry</span>
+            <div class="stat-card animate-fade-in" style="animation-delay: 0.3s; border-left: 4px solid var(--warning);">
+                <h3>Today's Visitors</h3>
+                <div class="value" th:text="${todayVisitors}">0</div>
+                <p class="trend">Guest Entries</p>
             </div>
-            <div class="action-card">
-                <span class="action-icon">💰</span>
-                <span class="action-label">Collect Payment</span>
-            </div>
-            <div class="action-card">
-                <span class="action-icon">📣</span>
-                <span class="action-label">Raise Complaint</span>
+            <div class="stat-card animate-fade-in" style="animation-delay: 0.4s; border-left: 4px solid var(--danger);">
+                <h3>Open Complaints</h3>
+                <div class="value" th:text="${pendingComplaints}">0</div>
+                <p class="trend">Needs Attention</p>
             </div>
         </div>
 
-        <div class="grid-layout">
-            <div class="left-col">
-                <div class="ops-card">
-                    <div class="ops-header">
-                        <div class="ops-title">Check-ins Today</div>
-                        <span style="font-size: 12px; color: var(--gold);">5 Expected</span>
-                    </div>
-                    <div class="item-list">
-                        <div class="list-row">
-                            <div class="item-main">
-                                <div class="item-avatar">MK</div>
-                                <div class="item-info">
-                                    <h4>Manish Kumar</h4>
-                                    <p>Deluxe Single · Deposit Paid</p>
-                                </div>
-                            </div>
-                            <span class="item-badge badge-room">Room 205</span>
-                        </div>
-                        <div class="list-row">
-                            <div class="item-main">
-                                <div class="item-avatar">AS</div>
-                                <div class="item-info">
-                                    <h4>Arjun Singh</h4>
-                                    <p>Double Sharing · Pending KYC</p>
-                                </div>
-                            </div>
-                            <span class="item-badge badge-room">Room 110</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ops-card">
-                    <div class="ops-header">
-                        <div class="ops-title">Room Availability</div>
-                        <button style="background: var(--gold); border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">View Map</button>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;">
-                        <div style="background: rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 14px; font-weight: 700;">102</div>
-                            <div style="font-size: 10px; color: var(--success);">Available</div>
-                        </div>
-                        <div style="background: rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 14px; font-weight: 700;">103</div>
-                            <div style="font-size: 10px; color: var(--danger);">Occupied</div>
-                        </div>
-                        <div style="background: rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 14px; font-weight: 700;">104</div>
-                            <div style="font-size: 10px; color: var(--success);">Available</div>
-                        </div>
-                        <div style="background: rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 14px; font-weight: 700;">105</div>
-                            <div style="font-size: 10px; color: var(--danger);">Occupied</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="right-col">
-                <div class="ops-card">
-                    <div class="ops-header">
-                        <div class="ops-title">Alerts & Notifications</div>
-                    </div>
-                    <div class="notification-list">
-                        <div class="notification-item">
-                            <span class="notif-icon">💳</span>
-                            <div class="notif-content">
-                                <div class="notif-title">Payment Overdue</div>
-                                <div class="notif-desc">Rahul Sharma (Room 204) rent overdue by 3 days.</div>
-                                <div class="notif-time">10 mins ago</div>
-                            </div>
-                        </div>
-                        <div class="notification-item" style="border-left-color: #3B82F6;">
-                            <span class="notif-icon">🚶</span>
-                            <div class="notif-content">
-                                <div class="notif-title">Visitor Alert</div>
-                                <div class="notif-desc">Visitor for Room 305 waiting at main gate.</div>
-                                <div class="notif-time">25 mins ago</div>
-                            </div>
-                        </div>
-                        <div class="notification-item" style="border-left-color: var(--danger);">
-                            <span class="notif-icon">🔧</span>
-                            <div class="notif-content">
-                                <div class="notif-title">Urgent Repair</div>
-                                <div class="notif-desc">Water leakage reported in Room 402.</div>
-                                <div class="notif-time">1 hour ago</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="section-card animate-fade-in" style="animation-delay: 0.5s;">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <a href="/receptionist/registration" class="stat-card" style="text-decoration: none; text-align: center; background: var(--primary-color); color: white;">
+                    <i class="fas fa-user-plus fa-2x"></i>
+                    <p style="margin-top: 0.5rem; font-weight: 600;">Check-in Tenant</p>
+                </a>
+                <a href="/receptionist/visitors" class="stat-card" style="text-decoration: none; text-align: center; background: var(--secondary-color); color: white;">
+                    <i class="fas fa-walking fa-2x"></i>
+                    <p style="margin-top: 0.5rem; font-weight: 600;">New Visitor</p>
+                </a>
+                <a href="/receptionist/payments" class="stat-card" style="text-decoration: none; text-align: center; background: var(--success); color: white;">
+                    <i class="fas fa-receipt fa-2x"></i>
+                    <p style="margin-top: 0.5rem; font-weight: 600;">Collect Rent</p>
+                </a>
             </div>
         </div>
     </div>

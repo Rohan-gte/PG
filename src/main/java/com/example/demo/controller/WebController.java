@@ -21,18 +21,6 @@ public class WebController {
         return "register";
     }
 
-    @GetMapping("/admin/dashboard")
-    public String adminDashboard() {
-        return "admin/dashboard";
-    }
 
-    @GetMapping("/receptionist/dashboard")
-    public String receptionistDashboard() {
-        return "receptionist/dashboard";
-    }
 
-    @GetMapping("/tenant/dashboard")
-    public String tenantDashboard() {
-        return "tenant/dashboard";
-    }
 }

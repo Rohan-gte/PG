@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Rooms - StaySync</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>StaySync</h2>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="/admin/rooms" class="active"><i class="fas fa-building"></i> Rooms & Beds</a></li>
+                <li><a href="/admin/tenants"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="/admin/payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a href="/admin/complaints"><i class="fas fa-exclamation-circle"></i> Complaints</a></li>
+                <li><a href="/admin/reports"><i class="fas fa-file-alt"></i> Reports</a></li>
+                <li><a href="/admin/staff"><i class="fas fa-user-tie"></i> Staff</a></li>
+                <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Manage Rooms & Beds</h1>
+            <button class="btn-primary" style="padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
+                <i class="fas fa-plus"></i> Add Building
+            </button>
+        </header>
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Total Buildings</h3><div class="value">0</div></div>
+            <div class="stat-card"><h3>Total Rooms</h3><div class="value">0</div></div>
+            <div class="stat-card"><h3>Available Beds</h3><div class="value">0</div></div>
+        </div>
+        <div class="section-card">
+            <h2>Room List</h2>
+            <p style="color: var(--text-muted);">No rooms configured yet. Start by adding a building.</p>
+        </div>
+    </div>
+</body>
+</html>

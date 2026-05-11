@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Menu - StaySync</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>StaySync</h2>
+        <nav>
+            <ul>
+                <li><a href="/tenant/dashboard"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="/tenant/payments"><i class="fas fa-wallet"></i> Rent & Payments</a></li>
+                <li><a href="/tenant/food" class="active"><i class="fas fa-utensils"></i> Food Menu</a></li>
+                <li><a href="/tenant/complaints"><i class="fas fa-headset"></i> Raise Complaint</a></li>
+                <li><a href="/tenant/visitors"><i class="fas fa-user-check"></i> Visitor Approval</a></li>
+                <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Weekly Food Menu</h1>
+        </header>
+
+        <div class="section-card animate-fade-in">
+            <div class="menu-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="stat-card">
+                    <h3 style="color: var(--primary-color);">Monday</h3>
+                    <ul style="list-style: none; margin-top: 1rem; color: var(--text-muted);">
+                        <li><strong>Breakfast:</strong> Poha & Tea</li>
+                        <li><strong>Lunch:</strong> Veg Thali</li>
+                        <li><strong>Snacks:</strong> Samosa</li>
+                        <li><strong>Dinner:</strong> Dal Makhani & Roti</li>
+                    </ul>
+                </div>
+                <!-- Repeat for other days -->
+            </div>
+            <div style="margin-top: 2rem; text-align: center;">
+                <button class="btn-primary" style="padding: 0.75rem 1.5rem; background: var(--secondary-color); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
+                    Give Food Feedback
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Handling - StaySync</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>StaySync</h2>
+        <nav>
+            <ul>
+                <li><a href="/receptionist/dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/receptionist/registration"><i class="fas fa-user-plus"></i> New Registration</a></li>
+                <li><a href="/receptionist/availability"><i class="fas fa-bed"></i> Room Availability</a></li>
+                <li><a href="/receptionist/payments"><i class="fas fa-money-bill-wave"></i> Collect Payments</a></li>
+                <li><a href="/receptionist/visitors"><i class="fas fa-walking"></i> Visitor Entry</a></li>
+                <li><a href="/receptionist/complaints" class="active"><i class="fas fa-tools"></i> Complaints</a></li>
+                <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1>Complaint Handling</h1>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card"><h3>New</h3><div class="value">0</div></div>
+            <div class="stat-card"><h3>Assigned</h3><div class="value">0</div></div>
+            <div class="stat-card"><h3>Resolved</h3><div class="value">0</div></div>
+        </div>
+
+        <div class="section-card animate-fade-in">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Recent Complaints</h2>
+                <button class="stat-card" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--primary-color); color: white; border: none; cursor: pointer;">
+                    Log Manual Complaint
+                </button>
+            </div>
+            <div class="activity-list">
+                <p style="color: var(--text-muted); text-align: center; padding: 2rem;">No pending complaints to display.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

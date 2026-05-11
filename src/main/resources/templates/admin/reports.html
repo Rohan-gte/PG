@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - StaySync</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>StaySync</h2>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="/admin/rooms"><i class="fas fa-building"></i> Rooms & Beds</a></li>
+                <li><a href="/admin/tenants"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="/admin/payments"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a href="/admin/complaints"><i class="fas fa-exclamation-circle"></i> Complaints</a></li>
+                <li><a href="/admin/reports" class="active"><i class="fas fa-file-alt"></i> Reports</a></li>
+                <li><a href="/admin/staff"><i class="fas fa-user-tie"></i> Staff</a></li>
+                <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Generate Reports</h1>
+        </header>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Monthly Revenue</h3>
+                <button class="btn-primary" style="margin-top: 1rem; width: 100%; padding: 0.5rem; background: var(--primary-color); border: none; color: white; border-radius: 4px;">Download PDF</button>
+            </div>
+            <div class="stat-card">
+                <h3>Occupancy Report</h3>
+                <button class="btn-primary" style="margin-top: 1rem; width: 100%; padding: 0.5rem; background: var(--primary-color); border: none; color: white; border-radius: 4px;">Download PDF</button>
+            </div>
+            <div class="stat-card">
+                <h3>Complaint Analytics</h3>
+                <button class="btn-primary" style="margin-top: 1rem; width: 100%; padding: 0.5rem; background: var(--primary-color); border: none; color: white; border-radius: 4px;">Download PDF</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
