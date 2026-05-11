@@ -1,39 +1,67 @@
 package com.example.demo.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.demo.dto.request.BookingRequestDto;
+import com.example.demo.dto.response.ApiMessage;
+import com.example.demo.dto.response.BookingRequestResponseDto;
+import com.example.demo.dto.response.DashboardDto;
+import com.example.demo.dto.response.PageResponse;
+import com.example.demo.dto.response.PaymentDto;
+import com.example.demo.security.CurrentUser;
+import com.example.demo.service.AnalyticsService;
+import com.example.demo.service.BookingService;
+import com.example.demo.service.PaymentService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/tenant")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/tenant")
 public class TenantController {
 
+    private final BookingService bookingService;
+    private final PaymentService paymentService;
+    private final AnalyticsService analyticsService;
+    private final CurrentUser currentUser;
+
+    public TenantController(BookingService bookingService,
+                            PaymentService paymentService,
+                            AnalyticsService analyticsService,
+                            CurrentUser currentUser) {
+        this.bookingService = bookingService;
+        this.paymentService = paymentService;
+        this.analyticsService = analyticsService;
+        this.currentUser = currentUser;
+    }
+
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        model.addAttribute("rentStatus", "PAID");
-        model.addAttribute("roomNumber", "A-101");
-        model.addAttribute("pendingComplaints", 0);
-        return "tenant/dashboard";
+    public DashboardDto dashboard() {
+        return analyticsService.tenantDashboard(currentUser.id());
+    }
+
+    @PostMapping("/bookings")
+    public BookingRequestResponseDto submitBooking(@Valid @RequestBody BookingRequestDto req) {
+        return bookingService.submit(currentUser.id(), req);
+    }
+
+    @GetMapping("/bookings")
+    public PageResponse<BookingRequestResponseDto> myBookings(Pageable pageable) {
+        return bookingService.listForTenant(currentUser.id(), pageable);
+    }
+
+    @PostMapping("/bookings/{id}/cancel")
+    public ApiMessage cancel(@PathVariable Long id) {
+        return bookingService.cancel(currentUser.id(), id);
     }
 
     @GetMapping("/payments")
-    public String viewPayments() {
-        return "tenant/payments";
+    public List<PaymentDto> payments() {
+        return paymentService.listForTenant(currentUser.id());
     }
 
-    @GetMapping("/food")
-    public String viewFoodMenu() {
-        return "tenant/food";
-    }
-
-    @GetMapping("/complaints")
-    public String raiseComplaint() {
-        return "tenant/complaints";
-    }
-
-    @GetMapping("/visitors")
-    public String approveVisitors() {
-        return "tenant/visitors";
+    @PostMapping("/payments/{id}/pay")
+    public PaymentDto pay(@PathVariable Long id) {
+        return paymentService.tenantPay(currentUser.id(), id);
     }
 }
