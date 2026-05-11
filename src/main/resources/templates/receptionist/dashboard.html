@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - StayEase PG</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #2C3E50;
+            --accent-light: #34495E;
+            --gold: #C9A84C;
+            --dark: #0F172A;
+            --dark-2: #1E293B;
+            --white: #FFFFFF;
+            --text-muted: #94A3B8;
+            --success: #10B981;
+            --danger: #EF4444;
+            --sidebar-width: 260px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--dark-2);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 50px;
+        }
+
+        .nav-menu { list-style: none; flex: 1; }
+        .nav-item { margin-bottom: 8px; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: calc(100vw - var(--sidebar-width));
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .header-title h1 { font-family: 'Playfair Display', serif; font-size: 28px; }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .action-card {
+            background: var(--dark-2);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .action-card:hover {
+            background: var(--gold);
+            transform: translateY(-5px);
+            color: var(--dark);
+        }
+        .action-icon { font-size: 24px; margin-bottom: 10px; display: block; }
+        .action-label { font-size: 13px; font-weight: 600; }
+
+        /* Grid Layout */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+
+        /* Operations Section */
+        .ops-card {
+            background: var(--dark-2);
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 30px;
+        }
+        .ops-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .ops-title { font-size: 18px; font-weight: 700; font-family: 'Playfair Display', serif; }
+
+        /* Notification List */
+        .notification-list { display: flex; flex-direction: column; gap: 15px; }
+        .notification-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border-left: 4px solid var(--gold);
+        }
+        .notif-icon { font-size: 20px; }
+        .notif-content { flex: 1; }
+        .notif-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .notif-desc { font-size: 12px; color: var(--text-muted); }
+        .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+        /* List Styling */
+        .item-list { display: flex; flex-direction: column; gap: 12px; }
+        .list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .item-main { display: flex; align-items: center; gap: 12px; }
+        .item-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--gold); }
+        .item-info h4 { font-size: 14px; margin-bottom: 2px; }
+        .item-info p { font-size: 12px; color: var(--text-muted); }
+        .item-badge { padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: 600; }
+        .badge-room { background: rgba(201, 168, 76, 0.1); color: var(--gold); }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">StayEase</div>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#" class="nav-link active">Dashboard</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Tenant Entry</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Room Allocation</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Visitors</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Payments</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Complaints</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Notifications</a></li>
+        </ul>
+        <a href="/login" class="nav-link" style="margin-top: auto; color: var(--danger);">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <header class="header">
+            <div class="header-title">
+                <h1>Receptionist Desk</h1>
+                <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">Managing daily operations for Block A & B.</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-weight: 600;">Sarah Johnson</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Shift: Morning (8 AM - 4 PM)</div>
+            </div>
+        </header>
+
+        <div class="quick-actions">
+            <div class="action-card">
+                <span class="action-icon">➕</span>
+                <span class="action-label">Add Tenant</span>
+            </div>
+            <div class="action-card">
+                <span class="action-icon">🔑</span>
+                <span class="action-label">Allocate Room</span>
+            </div>
+            <div class="action-card">
+                <span class="action-icon">📋</span>
+                <span class="action-label">Visitor Entry</span>
+            </div>
+            <div class="action-card">
+                <span class="action-icon">💰</span>
+                <span class="action-label">Collect Payment</span>
+            </div>
+            <div class="action-card">
+                <span class="action-icon">📣</span>
+                <span class="action-label">Raise Complaint</span>
+            </div>
+        </div>
+
+        <div class="grid-layout">
+            <div class="left-col">
+                <div class="ops-card">
+                    <div class="ops-header">
+                        <div class="ops-title">Check-ins Today</div>
+                        <span style="font-size: 12px; color: var(--gold);">5 Expected</span>
+                    </div>
+                    <div class="item-list">
+                        <div class="list-row">
+                            <div class="item-main">
+                                <div class="item-avatar">MK</div>
+                                <div class="item-info">
+                                    <h4>Manish Kumar</h4>
+                                    <p>Deluxe Single · Deposit Paid</p>
+                                </div>
+                            </div>
+                            <span class="item-badge badge-room">Room 205</span>
+                        </div>
+                        <div class="list-row">
+                            <div class="item-main">
+                                <div class="item-avatar">AS</div>
+                                <div class="item-info">
+                                    <h4>Arjun Singh</h4>
+                                    <p>Double Sharing · Pending KYC</p>
+                                </div>
+                            </div>
+                            <span class="item-badge badge-room">Room 110</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ops-card">
+                    <div class="ops-header">
+                        <div class="ops-title">Room Availability</div>
+                        <button style="background: var(--gold); border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer;">View Map</button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px;">
+                        <div style="background: rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 14px; font-weight: 700;">102</div>
+                            <div style="font-size: 10px; color: var(--success);">Available</div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 14px; font-weight: 700;">103</div>
+                            <div style="font-size: 10px; color: var(--danger);">Occupied</div>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 14px; font-weight: 700;">104</div>
+                            <div style="font-size: 10px; color: var(--success);">Available</div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 14px; font-weight: 700;">105</div>
+                            <div style="font-size: 10px; color: var(--danger);">Occupied</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="ops-card">
+                    <div class="ops-header">
+                        <div class="ops-title">Alerts & Notifications</div>
+                    </div>
+                    <div class="notification-list">
+                        <div class="notification-item">
+                            <span class="notif-icon">💳</span>
+                            <div class="notif-content">
+                                <div class="notif-title">Payment Overdue</div>
+                                <div class="notif-desc">Rahul Sharma (Room 204) rent overdue by 3 days.</div>
+                                <div class="notif-time">10 mins ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item" style="border-left-color: #3B82F6;">
+                            <span class="notif-icon">🚶</span>
+                            <div class="notif-content">
+                                <div class="notif-title">Visitor Alert</div>
+                                <div class="notif-desc">Visitor for Room 305 waiting at main gate.</div>
+                                <div class="notif-time">25 mins ago</div>
+                            </div>
+                        </div>
+                        <div class="notification-item" style="border-left-color: var(--danger);">
+                            <span class="notif-icon">🔧</span>
+                            <div class="notif-content">
+                                <div class="notif-title">Urgent Repair</div>
+                                <div class="notif-desc">Water leakage reported in Room 402.</div>
+                                <div class="notif-time">1 hour ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
