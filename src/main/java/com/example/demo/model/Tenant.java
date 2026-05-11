@@ -1,15 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +26,64 @@ public class Tenant {
 
     public enum Status {
         PENDING_APPROVAL, ACTIVE, EXPIRED, LEFT
+    }
+
+    public Tenant() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public LocalDate getJoiningDate() {
+        return joiningDate;
+    }
+
+    public void setJoiningDate(LocalDate joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public LocalDate getAgreementExpiryDate() {
+        return agreementExpiryDate;
+    }
+
+    public void setAgreementExpiryDate(LocalDate agreementExpiryDate) {
+        this.agreementExpiryDate = agreementExpiryDate;
+    }
+
+    public boolean isDocumentsVerified() {
+        return isDocumentsVerified;
+    }
+
+    // Matches your service call: tenant.setDocumentsVerified(true/false)
+    public void setDocumentsVerified(boolean documentsVerified) {
+        isDocumentsVerified = documentsVerified;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }
