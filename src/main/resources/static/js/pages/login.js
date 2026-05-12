@@ -37,7 +37,7 @@
                 </div>
                 <button class="btn primary lg block" type="submit" id="login-btn">Sign in</button>
             </form>
-            <div class="switch">New here? <a href="#/register">Create an account</a></div>
+            <div class="switch"><a href="#/home" class="auth-back-home">← Back to home</a> · New here? <a href="#/register">Create an account</a></div>
             <div class="divider"></div>
             <div class="muted" style="font-size:12px;text-align:center">
                 Default admin: <b>admin@pg.local</b> / <b>Admin@123</b>
@@ -57,7 +57,10 @@
             btn.disabled = true; btn.textContent = 'Signing in…';
             try {
                 const r = await PG.Auth.login(data.email, data.password);
-                location.hash = PG.Auth.roleHome(r.user.role);
+                const name = (r.user && r.user.fullName) ? r.user.fullName : 'there';
+                PG.UI.successPopup('Signed in successfully', 'Welcome back, ' + name + '.', 1300, function () {
+                    location.hash = PG.Auth.roleHome(r.user.role);
+                });
             } catch (ex) {
                 alertBox.innerHTML = `<div class="alert error">${PG.escape(ex.message || 'Login failed')}</div>`;
             } finally {
@@ -67,5 +70,4 @@
     }
 
     PG.Router.add('/login', [], render);
-    PG.Router.add('/', [], render);
 })(window.PG);

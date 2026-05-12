@@ -390,8 +390,9 @@
                         try {
                             const payload = buildPayload();
                             const res = await PG.api.post('/api/owner/buildings', payload);
-                            PG.UI.toast('Building created', 'success');
-                            location.hash = '#/owner/buildings/' + res.id;
+                            PG.UI.successPopup('Building created', 'Your PG is live. You can add rooms and manage reception from the next screen.', 1600, function () {
+                                location.hash = '#/owner/buildings/' + res.id;
+                            });
                         } catch (ex) {
                             PG.UI.toast(ex.message || 'Failed to create building', 'error');
                         }
@@ -488,7 +489,7 @@
 
         function validate() {
             if (state.step === 0) {
-                const form = PG.q('#bf-form');
+                const form = PG.q('#bf-form', card);
                 if (!form) return true;
                 if (!form.checkValidity()) { form.reportValidity(); return false; }
                 const data = collectBuildingForm(card);
@@ -496,14 +497,14 @@
                 return true;
             }
             if (state.step === 1) {
-                const form = PG.q('#rec-form');
+                const form = PG.q('#rec-form', card);
                 if (!form.checkValidity()) { form.reportValidity(); return false; }
                 Object.assign(state.receptionist, PG.UI.serializeForm(form));
                 return true;
             }
             if (state.step === 2) {
                 ['ONE','TWO','THREE'].forEach(st => {
-                    const content = PG.q(`[data-content="${st}"]`);
+                    const content = PG.q(`[data-content="${st}"]`, card);
                     if (!content || content.style.display === 'none') { state.sharings[st] = null; return; }
                     const cfg = {};
                     PG.qa('[data-f]', content).forEach(el => cfg[el.dataset.f] = Number(el.value));
@@ -535,8 +536,11 @@
                     monthlyRent: Number(v.monthlyRent),
                     depositAmount: Number(v.depositAmount)
                 }));
+            const basic = Object.assign({}, state.basic);
+            if (!basic.contactPhone || String(basic.contactPhone).trim() === '') delete basic.contactPhone;
+            if (!basic.contactEmail || String(basic.contactEmail).trim() === '') delete basic.contactEmail;
             return {
-                ...state.basic,
+                ...basic,
                 receptionist: state.receptionist,
                 sharingConfigs
             };

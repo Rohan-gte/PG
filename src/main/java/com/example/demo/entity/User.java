@@ -24,7 +24,8 @@ public class User {
     @Column(length = 25)
     private String phone;
 
-    @Column(nullable = false, length = 255)
+    /** BCrypt hash; maps to {@code password_hash}. */
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)

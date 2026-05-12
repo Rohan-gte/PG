@@ -28,7 +28,7 @@
             </div>
             <div id="alert"></div>
             <form id="reg-form"></form>
-            <div class="switch">Already have an account? <a href="#/login">Sign in</a></div>
+            <div class="switch"><a href="#/home" class="auth-back-home">← Back to home</a> · Already have an account? <a href="#/login">Sign in</a></div>
         `;
         formWrap.appendChild(card);
         wrap.appendChild(formWrap);
@@ -82,7 +82,7 @@
                 <div class="field-hint mt-12">Owner accounts require admin approval before you can log in.</div>
             `;
 
-            form.addEventListener('submit', async (e) => {
+            form.onsubmit = async function (e) {
                 e.preventDefault();
                 alertBox.innerHTML = '';
                 const data = PG.UI.serializeForm(form);
@@ -100,19 +100,21 @@
                             }
                         }
                         await PG.Auth.registerTenant(data);
-                        alertBox.innerHTML = `<div class="alert success">Account created. You can sign in now.</div>`;
-                        setTimeout(() => location.hash = '#/login', 900);
+                        PG.UI.successPopup('Account created', 'You can sign in with your email and password.', 1400, function () {
+                            location.hash = '#/login';
+                        });
                     } else {
                         await PG.Auth.registerOwner(data);
-                        alertBox.innerHTML = `<div class="alert info">Registration submitted. An administrator will approve your account before you can sign in.</div>`;
-                        setTimeout(() => location.hash = '#/login', 1500);
+                        PG.UI.successPopup('Registration submitted', 'An administrator will approve your account. You will receive access after approval.', 1800, function () {
+                            location.hash = '#/login';
+                        });
                     }
                 } catch (ex) {
                     alertBox.innerHTML = `<div class="alert error">${PG.escape(ex.message || 'Registration failed')}</div>`;
                 } finally {
                     btn.disabled = false; btn.textContent = role === 'TENANT' ? 'Create tenant account' : 'Register as PG Owner';
                 }
-            }, { once: false });
+            };
         }
     }
 

@@ -1,6 +1,14 @@
 (function (PG) {
     PG.UI = {};
 
+    function blurIfInsideModal(root) {
+        if (!root) return;
+        const ae = document.activeElement;
+        if (ae && ae !== document.body && root.contains(ae)) {
+            try { ae.blur(); } catch (_) {}
+        }
+    }
+
     /* -------- Toast -------- */
     PG.UI.toast = function (msg, kind) {
         const root = PG.q('#toast-root');
@@ -29,7 +37,13 @@
             box.appendChild(wrap);
         }
         const actions = PG.el('div', { class: 'modal-actions' });
-        const close = () => { root.classList.remove('open'); root.innerHTML = ''; };
+        const close = () => {
+            blurIfInsideModal(root);
+            root.classList.remove('open');
+            root.innerHTML = '';
+            root.setAttribute('aria-hidden', 'true');
+            root.onclick = null;
+        };
         if (opts.actions) {
             opts.actions.forEach(a => {
                 actions.appendChild(PG.el('button', {
@@ -49,8 +63,40 @@
         box.appendChild(actions);
         root.appendChild(box);
         root.classList.add('open');
+        root.setAttribute('aria-hidden', 'false');
         root.onclick = e => { if (e.target === root) close(); };
         return { close };
+    };
+
+    /** Premium success overlay (auto-dismiss). onDone runs after close animation. */
+    PG.UI.successPopup = function (title, subtitle, delayMs, onDone) {
+        const root = PG.q('#modal-root');
+        if (!root) {
+            if (typeof onDone === 'function') onDone();
+            return;
+        }
+        root.innerHTML = '';
+        const box = PG.el('div', { class: 'modal success-popup' });
+        box.appendChild(PG.el('div', { class: 'success-popup-icon', html: '&#10003;' }));
+        box.appendChild(PG.el('h3', { text: title || 'Success' }));
+        if (subtitle) box.appendChild(PG.el('p', { class: 'lead success-popup-sub', text: subtitle }));
+        let done = false;
+        function close() {
+            if (done) return;
+            done = true;
+            blurIfInsideModal(root);
+            root.classList.remove('open');
+            root.innerHTML = '';
+            root.onclick = null;
+            root.setAttribute('aria-hidden', 'true');
+            if (typeof onDone === 'function') onDone();
+        }
+        root.appendChild(box);
+        root.classList.add('open');
+        root.setAttribute('aria-hidden', 'false');
+        root.onclick = e => { if (e.target === root) close(); };
+        const ms = delayMs == null ? 1200 : delayMs;
+        setTimeout(close, ms);
     };
 
     PG.UI.confirm = function (title, message, onConfirm, kind) {

@@ -5,11 +5,18 @@
     function add(pattern, roles, render) {
         const keys = [];
         const rx = new RegExp('^' + pattern.replace(/:([a-zA-Z0-9_]+)/g, (_, k) => { keys.push(k); return '([^/]+)'; }) + '$');
-        routes.push({ rx, keys, roles, render });
+        routes.push({ pattern, rx, keys, roles, render });
+    }
+
+    /** Prefer static path segments over :params (e.g. /owner/buildings/new before /owner/buildings/:id). */
+    function routeSpecificity(r) {
+        const lit = r.pattern.replace(/:[a-zA-Z0-9_]+/g, '');
+        return lit.length * 100 + r.pattern.length - r.keys.length * 50;
     }
 
     function match(path) {
-        for (const r of routes) {
+        const ordered = routes.slice().sort((a, b) => routeSpecificity(b) - routeSpecificity(a));
+        for (const r of ordered) {
             const m = r.rx.exec(path);
             if (m) {
                 const params = {};
@@ -22,7 +29,7 @@
 
     async function dispatch() {
         if (currentTeardown) { try { currentTeardown(); } catch (_) {} currentTeardown = null; }
-        const hash = location.hash || '#/login';
+        const hash = location.hash || '#/home';
         const path = hash.replace(/^#/, '');
 
         if (path === '/logout') { PG.Auth.logout(); return; }
@@ -32,9 +39,14 @@
             if (u && u.role) { location.hash = PG.Auth.roleHome(u.role); return; }
         }
 
+        if ((path === '/' || path === '') && !PG.Auth.isLoggedIn()) {
+            location.hash = '#/home';
+            return;
+        }
+
         const mr = match(path);
         if (!mr) {
-            if (!PG.Auth.isLoggedIn()) { location.hash = '#/login'; return; }
+            if (!PG.Auth.isLoggedIn()) { location.hash = '#/home'; return; }
             const u = PG.Auth.currentUser();
             location.hash = PG.Auth.roleHome(u ? u.role : null);
             return;

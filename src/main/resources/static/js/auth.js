@@ -30,7 +30,7 @@
         logout() {
             PG.token.clear();
             PG.user.clear();
-            location.hash = '#/login';
+            location.hash = '#/home';
         },
         roleHome(role) {
             switch (role) {

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StayEase PG — Premium Paying Guest Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-pale: #FDF8EC;
+    --dark: #1A1A2E;
+    --dark-2: #16213E;
+    --dark-3: #0F3460;
+    --cream: #FBF7F0;
+    --text: #2C2C2C;
+    --text-muted: #7A7A8A;
+    --white: #FFFFFF;
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --radius: 16px;
+    --shadow: 0 20px 60px rgba(0,0,0,0.12);
+    --shadow-sm: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+  a { color: inherit; }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(26,26,46,0.95);
+    backdrop-filter: blur(20px);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+  .logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta { background: var(--gold); color: var(--dark); padding: 10px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; display: inline-block; }
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 50%, var(--dark-3) 100%);
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-content { max-width: 600px; z-index: 2; position: relative; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold); padding: 8px 18px; border-radius: 50px;
+    font-size: 13px; font-weight: 500; margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 900; line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 24px;
+  }
+  .hero h1 .gold { color: var(--gold); }
+  .hero p { font-size: 18px; line-height: 1.7; color: rgba(255,255,255,0.65); margin-bottom: 40px; max-width: 480px; }
+  .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold); color: var(--dark); padding: 16px 36px;
+    border-radius: 50px; font-weight: 600; font-size: 16px; border: none;
+    cursor: pointer; text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-outline {
+    background: transparent; color: var(--white); padding: 16px 36px;
+    border-radius: 50px; font-weight: 500; font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.3); text-decoration: none; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .hero-stats { display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--gold); }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+  .hero-image {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    width: 42%; max-width: 560px; z-index: 2; display: none;
+  }
+  @media (min-width: 1100px) { .hero-image { display: block; } }
+  .hero-image img { width: 100%; border-radius: 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.5); }
+  .stats-bar {
+    background: var(--white); padding: 32px 5%;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: var(--shadow-sm);
+  }
+  @media (max-width: 768px) { .stats-bar { grid-template-columns: 1fr 1fr; } }
+  .stats-bar-item { text-align: center; padding: 8px; }
+  .stats-bar-item .num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: var(--dark); }
+  .stats-bar-item .label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  section { padding: 80px 5%; }
+  .section-tag {
+    display: inline-block; background: var(--gold-pale);
+    color: #8B6914; font-size: 12px; font-weight: 600; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 6px 16px; border-radius: 50px; margin-bottom: 20px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 700; line-height: 1.15; color: var(--dark); margin-bottom: 16px;
+  }
+  .section-subtitle { font-size: 17px; color: var(--text-muted); line-height: 1.7; max-width: 560px; }
+  .features { background: var(--white); }
+  .features-header { text-align: center; margin-bottom: 56px; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .features-grid { grid-template-columns: 1fr; } }
+  .feature-card {
+    background: var(--cream); border-radius: var(--radius); padding: 28px;
+    border: 1px solid rgba(0,0,0,0.06); transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .feature-icon { font-size: 28px; margin-bottom: 16px; }
+  .feature-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 10px; }
+  .feature-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+  .rooms { background: var(--cream); }
+  .rooms-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+  .rooms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .rooms-grid { grid-template-columns: 1fr; } }
+  .room-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05); }
+  .room-image { width: 100%; height: 200px; object-fit: cover; display: block; }
+  .room-body { padding: 20px; }
+  .room-type { display: inline-block; background: var(--gold-pale); color: #8B6914; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 50px; margin-bottom: 10px; }
+  .room-name { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+  .room-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.55; }
+  .room-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid rgba(0,0,0,0.06); }
+  .room-price .amount { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; }
+  .room-status { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 50px; }
+  .status-available { background: #E8F8F0; color: #1A8A4A; }
+  .status-occupied { background: #FEE8E8; color: #CC3333; }
+  .dashboard-section { background: var(--dark); padding: 80px 5%; color: #fff; }
+  .dashboard-content { max-width: 1100px; margin: 0 auto; }
+  .dashboard-section .section-title { color: #fff; }
+  .dashboard-section .section-subtitle { color: rgba(255,255,255,0.55); }
+  .dash-mockup {
+    margin-top: 28px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 24px; backdrop-filter: blur(8px);
+  }
+  .dash-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .kpi-card { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.08); }
+  .kpi-label { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; }
+  .kpi-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold); margin-top: 6px; }
+  .pricing { background: var(--cream); }
+  .pricing-header { text-align: center; margin-bottom: 48px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; } }
+  .pricing-card { background: var(--white); border-radius: 20px; padding: 32px; border: 1px solid rgba(0,0,0,0.07); }
+  .pricing-card.featured { background: var(--dark); color: #fff; border-color: var(--gold); transform: scale(1.02); }
+  .plan-price .amount { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; }
+  .plan-features { list-style: none; margin: 20px 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+  .plan-btn { width: 100%; padding: 14px; border-radius: 50px; font-weight: 600; border: none; cursor: pointer; margin-top: 8px; }
+  .plan-btn-gold { background: var(--gold); color: var(--dark); }
+  .plan-btn-outline { background: transparent; border: 2px solid rgba(0,0,0,0.15); }
+  .booking { background: linear-gradient(135deg, var(--dark) 0%, var(--dark-3) 100%); padding: 80px 5%; color: #fff; }
+  .booking-inner { max-width: 720px; margin: 0 auto; text-align: center; }
+  .booking .section-title { color: #fff; }
+  .booking .section-subtitle { color: rgba(255,255,255,0.55); margin: 0 auto 28px; }
+  .form-submit {
+    margin-top: 16px; padding: 16px 32px; background: var(--gold); color: var(--dark);
+    border: none; border-radius: 50px; font-weight: 700; font-size: 15px; cursor: pointer;
+  }
+  footer { background: #0D0D1A; padding: 56px 5% 28px; color: rgba(255,255,255,0.45); font-size: 13px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 32px; margin-bottom: 32px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+  @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr; } }
+  .footer-brand .logo { font-size: 22px; margin-bottom: 12px; display: block; }
+  .footer-col h4 { color: #fff; margin-bottom: 12px; font-size: 13px; }
+  .footer-col ul { list-style: none; }
+  .footer-col a { color: rgba(255,255,255,0.45); text-decoration: none; }
+  .footer-col a:hover { color: var(--gold); }
+  .process { background: var(--cream); }
+  .process-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center; }
+  @media (max-width: 900px) { .process-steps { grid-template-columns: 1fr 1fr; } }
+  .step-number {
+    width: 56px; height: 56px; border-radius: 50%; background: #fff; border: 3px solid var(--gold);
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;
+    font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Stay<span>Ease</span> PG</div>
+  <ul class="nav-links">
+    <li><a href="#rooms">Rooms</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a target="_top" href="/#/login" style="color: var(--gold); font-weight: 700;">Login</a></li>
+  </ul>
+  <a class="nav-cta" target="_top" href="/#/register">Join Now</a>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">Premium PG Management Platform</div>
+    <h1>Your <span class="gold">Perfect Home</span><br>Away From Home</h1>
+    <p>Experience a fully managed paying guest facility with smart amenities, transparent billing, and a welcoming community — all in one seamless platform.</p>
+    <div class="hero-buttons">
+      <a href="#rooms" class="btn-primary">Explore Rooms</a>
+      <a target="_top" href="/#/login" class="btn-outline">Go to Dashboard</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">500+</div><div class="stat-label">Happy Tenants</div></div>
+      <div><div class="stat-num">12</div><div class="stat-label">PG Locations</div></div>
+      <div><div class="stat-num">98%</div><div class="stat-label">Satisfaction Rate</div></div>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=700&q=80" alt="Premium PG Room">
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stats-bar-item"><div class="num">₹8,000</div><div class="label">Starting Rent / Month</div></div>
+  <div class="stats-bar-item"><div class="num">24/7</div><div class="label">Security &amp; Support</div></div>
+  <div class="stats-bar-item"><div class="num">3 Meals</div><div class="label">Daily Home Food</div></div>
+  <div class="stats-bar-item"><div class="num">Free WiFi</div><div class="label">High-Speed Internet</div></div>
+</div>
+
+<section class="features" id="features">
+  <div class="features-header">
+    <div class="section-tag">Why Choose Us</div>
+    <h2 class="section-title">Everything You Need,<br>All in One Place</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Our platform combines smart management tools with premium amenities to give you the best PG experience.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">🏠</div><h3>Smart Room Allocation</h3><p>Match tenants to rooms by budget, sharing preference, and live availability.</p></div>
+    <div class="feature-card"><div class="feature-icon">💳</div><h3>Transparent Billing</h3><p>Automated rent tracking, receipts, and payment status for owners and tenants.</p></div>
+    <div class="feature-card"><div class="feature-icon">🍽️</div><h3>Home-Cooked Meals</h3><p>Plan menus and communicate meal timings from one dashboard.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔒</div><h3>24/7 Security</h3><p>Visitor logs, check-ins, and staff workflows built for safer PGs.</p></div>
+    <div class="feature-card"><div class="feature-icon">🧹</div><h3>Housekeeping</h3><p>Track maintenance requests from raise to resolution.</p></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><h3>Unified Portal</h3><p>Owners, receptionists, and tenants each get a tailored experience.</p></div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="features-header">
+    <div class="section-tag">Getting Started</div>
+    <h2 class="section-title">Move In Within 24 Hours</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Browse, book, complete KYC, and move in — with digital workflows at every step.</p>
+  </div>
+  <div class="process-steps">
+    <div><div class="step-number">1</div><h3 style="font-size:15px;margin-bottom:6px;">Choose a Room</h3><p class="section-subtitle" style="font-size:13px;margin:0 auto;">Filter by sharing type and rent.</p></div>
+    <div><div class="step-number">2</div><h3 style="font-size:15px;margin-bottom:6px;">Book &amp; Visit</h3><p class="section-subtitle" style="font-size:13px;margin:0 auto;">Schedule a visit or confirm online.</p></div>
+    <div><div class="step-number">3</div><h3 style="font-size:15px;margin-bottom:6px;">Complete KYC</h3><p class="section-subtitle" style="font-size:13px;margin:0 auto;">Upload documents securely.</p></div>
+    <div><div class="step-number">4</div><h3 style="font-size:15px;margin-bottom:6px;">Move In</h3><p class="section-subtitle" style="font-size:13px;margin:0 auto;">Pay deposit &amp; first month digitally.</p></div>
+  </div>
+</section>
+
+<section class="rooms" id="rooms">
+  <div class="rooms-header">
+    <div>
+      <div class="section-tag">Available Rooms</div>
+      <h2 class="section-title">Choose Your Comfort</h2>
+    </div>
+    <a href="#contact" class="btn-primary" style="font-size:14px;padding:12px 24px;text-decoration:none;">Book a visit</a>
+  </div>
+  <div class="rooms-grid">
+    <div class="room-card">
+      <img class="room-image" src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80" alt="Single AC">
+      <div class="room-body">
+        <div class="room-type">Single Occupancy</div>
+        <div class="room-name">Deluxe Single AC</div>
+        <div class="room-desc">Private room with attached bath, AC, wardrobe, and study table.</div>
+        <div class="room-footer"><div class="room-price"><span class="amount">₹15,000</span><span style="font-size:13px;color:var(--text-muted)"> /mo</span></div><span class="room-status status-available">Available</span></div>
+      </div>
+    </div>
+    <div class="room-card">
+      <img class="room-image" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80" alt="Double">
+      <div class="room-body">
+        <div class="room-type">Double Sharing</div>
+        <div class="room-name">Premium Double Share</div>
+        <div class="room-desc">Spacious shared room with lockers and balcony access.</div>
+        <div class="room-footer"><div class="room-price"><span class="amount">₹10,000</span><span style="font-size:13px;color:var(--text-muted)"> /mo</span></div><span class="room-status status-available">Available</span></div>
+      </div>
+    </div>
+    <div class="room-card">
+      <img class="room-image" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&q=80" alt="Triple">
+      <div class="room-body">
+        <div class="room-type">Triple Sharing</div>
+        <div class="room-name">Economy Triple Share</div>
+        <div class="room-desc">Budget-friendly with bunk beds and all essentials.</div>
+        <div class="room-footer"><div class="room-price"><span class="amount">₹8,000</span><span style="font-size:13px;color:var(--text-muted)"> /mo</span></div><span class="room-status status-occupied">Occupied</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-section">
+  <div class="dashboard-content">
+    <div class="section-tag" style="background:rgba(201,168,76,0.15);color:var(--gold);">Owner Dashboard</div>
+    <h2 class="section-title">Manage Everything From One Screen</h2>
+    <p class="section-subtitle">Revenue, occupancy, bookings, complaints, and payments — built for real PG operations.</p>
+    <div class="dash-mockup">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="font-family:'Playfair Display',serif;">StayEase Dashboard</strong>
+        <span style="font-size:12px;opacity:0.6;">Live</span>
+      </div>
+      <div class="dash-kpis">
+        <div class="kpi-card"><div class="kpi-label">Revenue</div><div class="kpi-value">₹2.4L</div></div>
+        <div class="kpi-card"><div class="kpi-label">Occupancy</div><div class="kpi-value">94%</div></div>
+        <div class="kpi-card"><div class="kpi-label">Pending</div><div class="kpi-value">₹18K</div></div>
+      </div>
+    </div>
+    <p style="margin-top:24px;text-align:center;"><a target="_top" href="/#/register" class="btn-primary" style="text-decoration:none;display:inline-block;">List your PG — Register as owner</a></p>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="pricing-header">
+    <div class="section-tag">Plans &amp; Pricing</div>
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Illustrative monthly rents. Actual rates vary by building and city.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Economy</div>
+      <div class="plan-price" style="margin-top:12px;"><span class="amount">₹8,000</span></div>
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:12px;">Triple sharing</p>
+      <ul class="plan-features"><li>WiFi &amp; meals</li><li>Housekeeping</li><li>24/7 security</li></ul>
+      <a target="_top" href="/#/register" class="plan-btn plan-btn-outline" style="text-decoration:none;text-align:center;display:block;">Get Started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;">Standard</div>
+      <div class="plan-price" style="margin-top:12px;"><span class="amount">₹12,000</span></div>
+      <p style="opacity:0.65;font-size:14px;margin-bottom:12px;">Double sharing AC</p>
+      <ul class="plan-features" style="color:rgba(255,255,255,0.85);"><li>Snacks &amp; locker</li><li>Laundry add-on</li><li>Priority support</li></ul>
+      <a target="_top" href="/#/login" class="plan-btn plan-btn-gold" style="text-decoration:none;text-align:center;display:block;">Book Now</a>
+    </div>
+    <div class="pricing-card">
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;">Premium</div>
+      <div class="plan-price" style="margin-top:12px;"><span class="amount">₹18,000</span></div>
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:12px;">Single occupancy</p>
+      <ul class="plan-features"><li>Attached bath</li><li>Custom diet</li><li>Dedicated support</li></ul>
+      <a target="_top" href="/#/register" class="plan-btn plan-btn-outline" style="text-decoration:none;text-align:center;display:block;">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="contact">
+  <div class="booking-inner">
+    <div class="section-tag" style="background:rgba(201,168,76,0.15);color:var(--gold);">Book a Room</div>
+    <h2 class="section-title">Ready to Move In?</h2>
+    <p class="section-subtitle">Create a tenant account or sign in to browse live listings from verified PG owners on PG Manager.</p>
+    <button type="button" class="form-submit" onclick="window.top.location.hash='#/register'">Create tenant account</button>
+    <p style="margin-top:16px;font-size:13px;opacity:0.75;">Already registered? <a target="_top" href="/#/login" style="color:var(--gold);font-weight:600;">Sign in</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo">Stay<span>Ease</span> PG</span>
+      <p style="max-width:280px;line-height:1.6;">Premium paying guest experience — powered by PG Manager for owners, staff, and tenants.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#rooms">Rooms</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a target="_top" href="/#/login">Dashboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <ul>
+        <li><a target="_top" href="/#/login">Login</a></li>
+        <li><a target="_top" href="/#/register">Register</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);">© 2026 StayEase PG · PG Manager</div>
+</footer>
+
+</body>
+</html>

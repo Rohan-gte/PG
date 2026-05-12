@@ -47,27 +47,27 @@ public class OwnerController {
         return buildingService.createBuilding(currentUser.id(), req);
     }
 
-    @GetMapping("/buildings/{id}")
+    @GetMapping("/buildings/{id:\\d+}")
     public BuildingDto getBuilding(@PathVariable Long id) {
         return buildingService.getForOwner(currentUser.id(), id);
     }
 
-    @PutMapping("/buildings/{id}")
+    @PutMapping("/buildings/{id:\\d+}")
     public BuildingDto updateBuilding(@PathVariable Long id, @Valid @RequestBody UpdateBuildingRequest req) {
         return buildingService.updateBuilding(currentUser.id(), id, req);
     }
 
-    @DeleteMapping("/buildings/{id}")
+    @DeleteMapping("/buildings/{id:\\d+}")
     public ApiMessage deleteBuilding(@PathVariable Long id) {
         return buildingService.deleteBuilding(currentUser.id(), id);
     }
 
-    @GetMapping("/buildings/{id}/rooms")
+    @GetMapping("/buildings/{id:\\d+}/rooms")
     public List<RoomDto> rooms(@PathVariable Long id) {
         return buildingService.roomsForOwner(currentUser.id(), id);
     }
 
-    @PostMapping("/buildings/{id}/rooms")
+    @PostMapping("/buildings/{id:\\d+}/rooms")
     public RoomDto addRoom(@PathVariable Long id, @Valid @RequestBody AddRoomRequest req) {
         return buildingService.addRoom(currentUser.id(), id, req);
     }

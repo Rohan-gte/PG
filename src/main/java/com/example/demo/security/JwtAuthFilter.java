@@ -40,12 +40,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String email = claims.getSubject();
                 Object roleClaim = claims.get("role");
                 Object uidClaim = claims.get("uid");
-                if (email != null && roleClaim != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Must replace AnonymousAuthenticationToken (AnonymousFilter runs before this filter).
+                if (email != null && roleClaim != null) {
                     Long uid = uidClaim == null ? null : Long.valueOf(uidClaim.toString());
-                    AuthUser principal = new AuthUser(uid, email, roleClaim.toString());
+                    String role = roleClaim.toString();
+                    AuthUser principal = new AuthUser(uid, email, role);
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             principal, null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + roleClaim))
+                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
                     );
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(auth);
